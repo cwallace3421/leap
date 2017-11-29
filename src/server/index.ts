@@ -1,4 +1,5 @@
 import * as http from 'http';
+import * as path from 'path';
 import * as socket from 'socket.io';
 import * as uuid from 'uuid/v4';
 
@@ -19,7 +20,7 @@ server.listen(process.env.PORT || 8080, function() {
 	One node server shouldn't be serving the files + running the socket/game logic.
 */
 app.get('/', function(request, response) {
-	response.sendFile(__dirname + '/index.html');
+	response.sendFile(path.resolve(__dirname, '../../index.html'));
 });
 
 app.post('/enter', function(request, response) {
