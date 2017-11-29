@@ -8,6 +8,11 @@ module.exports = {
 
 	target: 'node',
 
+	node: {
+		__dirname: false,
+		__filename: false,
+	},
+
 	output: {
 		filename: 'bundle.js',
 		path: path.resolve(__dirname, 'dist/server')
