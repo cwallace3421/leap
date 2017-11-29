@@ -30,7 +30,7 @@ interface Session {
 	Socket : SocketIOClient.Socket;
 }
 
-interface Tile {
+export interface Tile {
 	type : number;
 	x : number;
 	y : number;
