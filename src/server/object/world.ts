@@ -1,9 +1,18 @@
-const uuid = require('uuid/v4');
-const Helper = require('../utils/helper.js');
-const Constants = require('../../shared/js/constants.js');
-const Room = require('./room.js');
+import * as uuid from 'uuid/v4';
+
+import Constants from '../../shared/js/constants';
+import Helper from '../utils/helper';
+import Room from './room';
 
 class World {
+
+	private id;
+	private io;
+	private players;
+	private room;
+	private maxSize;
+	private minSize;
+	public tickObj;
 
 	constructor(io) {
 		this.id = uuid();
@@ -65,7 +74,7 @@ class World {
 		return this.players.length < this.maxSize;
 	}
 
-	_log(message, error) {
+	_log(message, error? : boolean) {
 		if (error) {
 			console.error('WORLD[' + this.id + '] :: ' + message);
 		} else {
@@ -108,4 +117,5 @@ class World {
 	}
 
 }
-module.exports = World;
+
+export default World;

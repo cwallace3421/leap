@@ -1,9 +1,16 @@
-const Constants = require('../../shared/js/constants.js');
-const Helper = require('../utils/helper.js');
-const RoomMap = require('./roommap.js');
-const Player = require('./player.js');
+import Constants from '../../shared/js/constants';
+import Helper from '../utils/helper';
+import Player from './player';
+import RoomMap from './roommap';
 
 class Room {
+
+	private countdown;
+	private countdownTimestamp;
+	private world;
+	private map;
+	private state;
+	private finishTimestamp;
 
 	constructor(world) {
 		this.countdown = 10;
@@ -28,7 +35,7 @@ class Room {
 	}
 
 	newPlayer(player) {
-		if (this.getState === Constants.PLAYING_STATES.PLAYING || this.getState === Constants.PLAYING_STATES.FINISH) {
+		if (this.getState() === Constants.PLAYING_STATES.PLAYING || this.getState() === Constants.PLAYING_STATES.FINISH) {
 			player.setAlive(false);
 		}
 
@@ -123,7 +130,7 @@ class Room {
 		return Math.floor((+new Date()) / 1000);
 	}
 
-	_log(message, error) {
+	_log(message, error? : boolean) {
 		if (error) {
 			console.error('ROOM[PARENT:' + this.world.getID() + '] :: ' + message);
 		} else {
@@ -157,4 +164,5 @@ class Room {
 	}
 
 }
-module.exports = Room;
+
+export default Room;

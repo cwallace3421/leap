@@ -1,12 +1,15 @@
-const uuid = require('uuid/v4');
-const compression = require('compression');
-const bodyparser = require('body-parser');
-const express = require('express');
-const app = express();
-const server = require('http').Server(app);
-const io = require('socket.io').listen(server);
+import * as socket from 'socket.io';
 
-const GameServer = require('./src/server/gameserver.js');
+import bodyparser from 'body-parser';
+import compression from 'compression';
+import express from 'express';
+import gameserver from './src/server/gameserver';
+import http from 'http';
+import uuid from 'uuid/v4';
+
+const app : any = <Express.Application>express();
+const server : http.Server = http.createServer(<any> app);
+const io : SocketIO.Server = socket.listen(server);
 
 app.use(compression());
 app.use('/almond', express.static('node_modules/almond/'));
@@ -31,7 +34,7 @@ app.use(function (err, req, res, next) {
 
 server.listen(process.env.PORT || 8080, function() {
 	console.log('Listening on ' + server.address().port);
-	GameServer.start(io);
+	gameserver.start(io);
 });
 
 /*
@@ -56,7 +59,7 @@ app.post('/enter', function(request, response) {
 				nick: nick
 			},
 		});
-		GameServer.incomingID(id);
+		gameserver.incomingID(id);
 		console.log(nick + ' | ' + id + ' now awaiting socket connection');
 	} else {
 		response.status(400).send({

@@ -1,7 +1,12 @@
-const Constants = require('../../shared/js/constants.js');
-const Helper = require('../utils/helper');
+import Constants from '../../shared/js/constants';
+import Helper from '../utils/helper';
 
 class RoomMap {
+
+	private template;
+	private padding;
+	private tileSize;
+	private map;
 
 	constructor() {
 		this.template = [
@@ -37,7 +42,7 @@ class RoomMap {
 	}
 
 	getSpawn() {
-		const pos = {};
+		const pos : Position = {};
 		do {
 			pos.x = Helper.randomIntFromInterval(
 				Constants.MAP_PADDING + 10,
@@ -56,4 +61,10 @@ class RoomMap {
 	}
 
 }
-module.exports = RoomMap;
+
+interface Position {
+	x? : number;
+	y? : number;
+}
+
+export default RoomMap;

@@ -1,4 +1,13 @@
 class Player {
+
+	private id;
+	private socket;
+	private position;
+	private keys;
+	private nick;
+	private alive;
+	private lastUpdated;
+
 	constructor(id, socket, nick, x = 0, y = 0) {
 		this.id = id;
 		this.socket = socket;
@@ -78,22 +87,22 @@ class Player {
 	_isUpdated() {
 		this.lastUpdated = (+ new Date());
 	}
-}
 
-Player.tickAll = function(array, delta) {
-	for (let i = 0; i < array.length; i++) {
-		if (array[i].isAlive()) {
-			array[i].tick(delta);
+	public static tickAll = function(array, delta) {
+		for (let i = 0; i < array.length; i++) {
+			if (array[i].isAlive()) {
+				array[i].tick(delta);
+			}
 		}
 	}
-};
 
-Player.getAllPackets = function(array) {
-	let players = [];
-	for (let i = 0; i < array.length; i++) {
-		players.push(array[i].getPacket());
+	public static getAllPackets = function(array) {
+		let players = [];
+		for (let i = 0; i < array.length; i++) {
+			players.push(array[i].getPacket());
+		}
+		return players;
 	}
-	return players;
-};
+}
 
-module.exports = Player;
+export default Player;
