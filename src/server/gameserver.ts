@@ -9,32 +9,49 @@ class GameServer {
 	private PLAYERS = [];
 	private WORLDS = [];
 
-	private io;
+	private io : SocketIO.Server;
 
-	start(io) {
+	/**
+	 * Start the game server
+	 * @public
+	 * @param {SocketIO.Server} io
+	 */
+	public start(io : SocketIO.Server) {
 		this.io = io;
-		this._initSocketLogic();
+		this.initSocketLogic();
 	}
 
-	// :: Add A New Id And Nick To the INCOMING List
-	incomingID(id, nick) {
+	/**
+	 * Add a new id and nick to the incoming list
+	 * @public
+	 * @param {string} id
+	 * @param {string} nick
+	 */
+	public incomingID(id : string, nick : string) {
 		this.INCOMING.push(new Incoming(id, nick));
 		// TODO: Check and Remove old IDs
 	}
 
-	// :: Logic For When A Socket Successfully Connects
-	_socketOnConnection(socket) {
-		let player = this._getPlayerFromSocket(socket);
+	/**
+	 * Logic for when a socket successfully connects
+	 * @private
+	 * @param {SocketIO.Socket} socket
+	 */
+	private socketOnConnection(socket : SocketIO.Socket) {
+		let player = this.getPlayerFromSocket(socket);
 		if (!player) {
 			socket.disconnect();
 		} else {
 			console.log(player.nick + ' | ' + player.id + ' socket connection received, joining a world');
-			this._findOrCreateWorld().join(player);
+			this.findOrCreateWorld().join(player);
 		}
 	}
 
-	// :: Find A World With Space, Or Create A New World
-	_findOrCreateWorld() {
+	/**
+	 * Find a world with space, or create a new world
+	 * @private
+	 */
+	private findOrCreateWorld() {
 		for (let i = 0; i < this.WORLDS.length; i++) {
 			if (this.WORLDS[i].canJoin()) {
 				return this.WORLDS[i];
@@ -46,8 +63,11 @@ class GameServer {
 		return world;
 	}
 
-	// :: Init Logic For Socket Connections
-	_initSocketLogic() {
+	/**
+	 * Init logic for socket connections
+	 * @private
+	 */
+	private initSocketLogic() {
 		let io = this.io;
 
 		// -- Make Sure Incoming Connection Is Valid
@@ -57,7 +77,7 @@ class GameServer {
 			if (id && nick) {
 				for (let i = 0; i < this.INCOMING.length; i++) {
 					if (this.INCOMING[i].id === id) {
-						this._createPlayerObject(id, nick, socket);
+						this.createPlayerObject(id, nick, socket);
 						return next();
 					}
 				}
@@ -66,11 +86,17 @@ class GameServer {
 		});
 
 		// -- Setup Socket Connection
-		io.on(Constants.EVENTS.CONNECTION, this._socketOnConnection.bind(this));
+		io.on(Constants.EVENTS.CONNECTION, this.socketOnConnection.bind(this));
 	}
 
-	// :: Remove ID From INCOMING And Create New Player Object
-	_createPlayerObject(id, nick, socket) {
+	/**
+	 * Remove id from incoming list and create new player object
+	 * @private
+	 * @param {string} id
+	 * @param {string} nick
+	 * @param {SocketIO.Socket} socket
+	 */
+	private createPlayerObject(id : string, nick : string, socket : SocketIO.Socket) {
 		for (let i = 0; i < this.INCOMING.length; i++) {
 			if (this.INCOMING[i].id === id) {
 				this.INCOMING.splice(i, 1);
@@ -80,8 +106,12 @@ class GameServer {
 		this.PLAYERS.push(new Player(id, socket, nick));
 	}
 
-	// :: Get Player Object From PLAYERS Based On A Socket Object
-	_getPlayerFromSocket(socket) {
+	/**
+	 * Get player object from players list based on a socket object
+	 * @private
+	 * @param {SocketIO.Socket} socket
+	 */
+	private getPlayerFromSocket(socket : SocketIO.Socket) {
 		if (this.PLAYERS.length === 0 || !socket) {
 			return undefined;
 		}
