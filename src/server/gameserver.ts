@@ -1,14 +1,19 @@
 import Constants from '../shared/js/constants';
 import Incoming from './model/incoming';
 import Player from './object/player';
+import Room from './object/room';
 import Utils from './utils/utils';
 import World from './object/world';
 
 class GameServer {
 
-	private io : SocketIO.Server;
 	private incomingConnections : Incoming[];
+	private io : SocketIO.Server;
+	private room : Room;
 	private players : Player[];
+	private minPlayers : number;
+	private maxPlayers : number;
+	private tickIntervalId : number;
 
 	/**
 	 * Start the game server
@@ -16,17 +21,31 @@ class GameServer {
 	 * @param {SocketIO.Server} io
 	 */
 	public start(io : SocketIO.Server) {
-		this.io = io;
 		this.incomingConnections = [];
+		this.io = io;
+		this.room = new Room(this);
 		this.players = [];
-		this.initSocketLogic();
+		this.minPlayers = 2;
+		this.maxPlayers = 25;
+		this.initServerSocketLogic();
+	}
+
+	/**
+	 * Add a new id and nick to the incoming list
+	 * @public
+	 * @param {string} id
+	 * @param {string} nick
+	 */
+	public incomingID(id : string, nick : string) {
+		this.incomingConnections.push(new Incoming(id, nick));
+		// TODO: Check and Remove old IDs
 	}
 
 	/**
 	 * Init logic for socket connections
 	 * @private
 	 */
-	private initSocketLogic() {
+	private initServerSocketLogic() {
 		this.io.use((socket, next) => {
 			const id = socket.handshake.query.id;
 			const nick = socket.handshake.query.nick;
@@ -62,21 +81,77 @@ class GameServer {
 
 		if (canConnect) {
 			const player = new Player(socket, myIncoming.getId(), myIncoming.getNick());
-			console.log(`${player.getNick()} | ${player.getId()} socket connection received, joining a world`);
+			player.getSocket().emit(Constants.EVENTS.WORLD_JOINED, null, (ack) => {
+				// TODO: Check acknowledgement
+				this.players.push(player);
+				this.room.newPlayer(player);
+				console.log(`${player.getNick()} | ${player.getId()} has joined`);
+			});
+			console.log(`${player.getNick()} | ${player.getId()} socket connection received`);
 		} else {
 			socket.disconnect();
 		}
 	}
 
 	/**
-	 * Add a new id and nick to the incoming list
-	 * @public
-	 * @param {string} id
-	 * @param {string} nick
+	 * Init socket logic for a player
+	 * @private
+	 * @param {Player} player
 	 */
-	public incomingID(id : string, nick : string) {
-		this.incomingConnections.push(new Incoming(id, nick));
-		// TODO: Check and Remove old IDs
+	private initPlayerSocketLogic(player : Player) {
+		const socket = player.getSocket();
+
+		socket.on(Constants.EVENTS.CLIENT_UPDATE, (data) => {
+			if (player.isAlive() && this.room.isState(Constants.PLAYING_STATES.PLAYING)) {
+				player.update(data);
+			}
+		});
+
+		socket.on(Constants.EVENTS.DISCONNECT, () => {
+			if (this.players.length > 0) {
+				for (let i = 0; i < this.players.length; i++) {
+					if (this.players[i].equals(player)) {
+						this.players.splice(i, 1);
+						return;
+					}
+				}
+			}
+			console.log(`${player.getNick()} | ${player.getId()} has just disconnected`);
+		});
+	}
+
+	private tick(delta : number) {
+		this.room.tick(delta);
+	}
+
+	public canJoin() {
+		return this.players.length <= this.maxPlayers;
+	}
+
+	public getIO() {
+		return this.io;
+	}
+
+	public getPlayers() {
+		return this.players;
+	}
+
+	public getMinPlayers() {
+		return this.minPlayers;
+	}
+
+	public getMaxPlayers() {
+		return this.maxPlayers;
+	}
+
+	public getNumberAlive() {
+		let count = 0;
+		for (let i = 0; i < this.players.length; i++) {
+			if (this.players[i].isAlive()) {
+				count++;
+			}
+		}
+		return count;
 	}
 
 }
