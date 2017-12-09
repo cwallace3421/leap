@@ -1,14 +1,14 @@
 class Player {
 
-	private id;
-	private socket;
-	private position;
-	private keys;
-	private nick;
-	private alive;
-	private lastUpdated;
+	private id : string;
+	private nick : string;
+	private socket : SocketIO.Socket;
+	private position : { x : number; y : number };
+	private keys : { up : boolean; down : boolean; left : boolean; right : boolean;	jump : boolean; attack : boolean };
+	private alive : boolean;
+	private lastUpdated : number;
 
-	constructor(id, socket, nick, x = 0, y = 0) {
+	constructor(socket : SocketIO.Socket, id : string, nick : string, x = 0, y = 0) {
 		this.id = id;
 		this.socket = socket;
 		this.position = {
@@ -25,19 +25,29 @@ class Player {
 		};
 		this.nick = nick;
 		this.alive = true;
-		this._isUpdated();
+		this.isUpdated();
 	}
 
-	update(packet) {
+	/**
+	 * Update player state with packet
+	 * @public
+	 * @param {any} packet
+	 */
+	public update(packet : any) {
 		for (let key in packet) {
 			if (this.keys.hasOwnProperty(key)) {
 				this.keys[key] = packet[key];
 			}
 		}
-		this._isUpdated();
+		this.isUpdated();
 	}
 
-	tick(delta) {
+	/**
+	 * Tick players logic
+	 * @public
+	 * @param {number} delta
+	 */
+	public tick(delta : number) {
 		delta = 1;
 		let speed = 1;
 		if (this.keys.up) {
@@ -53,20 +63,64 @@ class Player {
 		}
 	}
 
-	setPosition(x, y) {
+	/**
+	 * Set player's x and y position
+	 * @public
+	 * @param {number} x
+	 * @param {number} y
+	 */
+	public setPosition(x : number, y : number) {
 		this.position.x = x;
 		this.position.y = y;
 	}
 
-	hasSocket(socket) {
+	/**
+	 * Does the player have this socket?
+	 * @public
+	 * @param {SocketIO.Socket} socket
+	 */
+	public hasSocket(socket : SocketIO.Socket) {
 		return this.socket.id === socket.id;
 	}
 
-	equals(player) {
-		return this.id === player.id && this.nick === player.nick;
+	/**
+	 * Does the provided player equal this player?
+	 * @public
+	 * @param player
+	 */
+	public equals(player : Player) {
+		return this.id === player.getId() && this.nick === player.getNick() && this.socket.id === player.getSocket().id;
 	}
 
-	getPacket() {
+	/**
+	 * Get the player id
+	 * @public
+	 */
+	public getId() {
+		return this.id;
+	}
+
+	/**
+	 * Get the player nickname
+	 * @public
+	 */
+	public getNick() {
+		return this.nick;
+	}
+
+	/**
+	 * Get the player socket
+	 * @public
+	 */
+	public getSocket() {
+		return this.socket;
+	}
+
+	/**
+	 * Gets a packet for this player
+	 * @public
+	 */
+	public getPacket() {
 		return {
 			id: this.id,
 			nick: this.nick,
@@ -76,19 +130,39 @@ class Player {
 		};
 	}
 
-	setAlive(isAlive) {
-		this.alive = isAlive;
+	/**
+	 * Set this players alive state
+	 * @public
+	 * @param {boolean} alive
+	 */
+	public setAlive(alive : boolean) {
+		this.alive = alive;
 	}
 
-	isAlive() {
+	/**
+	 * Is this player alive?
+	 * @public
+	 */
+	public isAlive() {
 		return this.alive;
 	}
 
-	_isUpdated() {
+	/**
+	 * Update the players last updated with nows timestamp
+	 * @private
+	 */
+	private isUpdated() {
 		this.lastUpdated = (+ new Date());
 	}
 
-	public static tickAll = function(array, delta) {
+	/**
+	 * Call tick on all the provided players
+	 * @public
+	 * @static
+	 * @param {Player[]} array
+	 * @param {number} delta
+	 */
+	public static tickAll(array : Player[], delta : number) {
 		for (let i = 0; i < array.length; i++) {
 			if (array[i].isAlive()) {
 				array[i].tick(delta);
@@ -96,13 +170,20 @@ class Player {
 		}
 	}
 
-	public static getAllPackets = function(array) {
+	/**
+	 * Get the packets of all the provided players
+	 * @public
+	 * @static
+	 * @param {Player[]} array
+	 */
+	public static getAllPackets(array : Player[]) {
 		let players = [];
 		for (let i = 0; i < array.length; i++) {
 			players.push(array[i].getPacket());
 		}
 		return players;
 	}
+
 }
 
 export default Player;

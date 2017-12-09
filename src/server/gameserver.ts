@@ -61,7 +61,7 @@ class GameServer {
 		const canConnect = myIncoming && Utils.timeSince(myIncoming.getTimestamp()) < 5;
 
 		if (canConnect) {
-			const player = new Player(myIncoming.getId(), socket, myIncoming.getNick());
+			const player = new Player(socket, myIncoming.getId(), myIncoming.getNick());
 			console.log(`${player.getNick()} | ${player.getId()} socket connection received, joining a world`);
 		} else {
 			socket.disconnect();
