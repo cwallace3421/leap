@@ -54,6 +54,14 @@ class Countdown {
 	}
 
 	/**
+	 * Trigger the complete callback
+	 * @public
+	 */
+	public triggerCallback() {
+		this.callback();
+	}
+
+	/**
 	 * Is the countdown ready to start
 	 * @public
 	 * @returns {boolean} Ready

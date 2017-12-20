@@ -44,9 +44,7 @@ class Playing {
 		Session.Game.renderer.clearBeforeRender = false;
 		Session.Game.renderer.renderSession.roundPixels = true;
 
-		Connection.start((response : any) => {
-			Session.WorldId = response.worldId;
-		});
+		Connection.start();
 		Listeners.open();
 
 		this.ui = {};
@@ -113,7 +111,11 @@ class Playing {
 				this.ui.countdown.kill();
 				this.ui.countdown = null;
 			}
-			this.countdown = null;
+
+			if (this.countdown) {
+				this.countdown.triggerCallback();
+				this.countdown = null;
+			}
 		}
 	}
 
@@ -126,9 +128,6 @@ class Playing {
 		Session.Game.scale.setGameSize(window.innerWidth, window.innerHeight);
 	}
 
-	/*
-		Load all assets for all sub states
-	*/
 	preload() {
 		Session.Game.load.spritesheet('platform_tileset', 'assets/platform_tileset.png', 56, 56);
 		Session.Game.load.spritesheet('character', 'assets/char.png', 3, 8, 4);

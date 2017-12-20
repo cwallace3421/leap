@@ -33,6 +33,10 @@ const Constants = {
 		SPECTATING: 3,
 	},
 
+	SERVER: {
+		TICK_RATE: 1000 / 20
+	},
+
 	EVENTS: {
 		CONNECTION: 'connection',
 		DISCONNECT: 'disconnect',

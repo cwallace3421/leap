@@ -3,10 +3,10 @@ import Helper from '../utils/helper';
 
 class RoomMap {
 
-	private template;
-	private padding;
-	private tileSize;
-	private map;
+	private template : number[][];
+	private padding : number;
+	private tileSize : number;
+	private map : number[][];
 
 	constructor() {
 		this.template = [
@@ -32,16 +32,33 @@ class RoomMap {
 		}
 	}
 
-	tick(delta) {
+	/**
+	 * Tick the map logic
+	 * @public
+	 * @param {number} delta
+	 */
+	public tick(delta : number) {
 
 	}
 
-	isOnTile(x, y) {
+	/**
+	 * Is the x and y on a tile
+	 * @public
+	 * @param {number} x
+	 * @param {number} y
+	 * @returns {boolean}
+	 */
+	public isOnTile(x : number, y : number) {
 		console.log('TODO: isOnTile');
 		return true;
 	}
 
-	getSpawn() {
+	/**
+	 * Get a random position on the map
+	 * @public
+	 * @returns {Position}
+	 */
+	public getSpawn() {
 		const pos : Position = {};
 		do {
 			pos.x = Helper.randomIntFromInterval(
@@ -56,7 +73,12 @@ class RoomMap {
 		return pos;
 	}
 
-	getPacket() {
+	/**
+	 * Get the map packet
+	 * @public
+	 * @returns {number[][]}
+	 */
+	public getPacket() {
 		return this.map;
 	}
 

@@ -3,7 +3,6 @@ import { PlayerPacket } from "../playing/interface/player";
 const Session : Session = {
 	Game: null,
 	Id: null,
-	WorldId: null,
 	State: 0,
 	Countdown: 0,
 	CountdownActive: false,
@@ -18,7 +17,6 @@ const Session : Session = {
 interface Session {
 	Game : Phaser.Game;
 	Id : string;
-	WorldId : string;
 	State : number;
 	Countdown : number;
 	CountdownActive : boolean;

@@ -56,7 +56,3 @@ app.post('/enter', function(request, response) {
 //   do we get the nickname the user logs in with?
 // Am I over complicating this? Does the player actually login? or just join
 //   the game?
-
-// How do we call a function on the GameServer when it is just a function,
-// do we need to make it a object??
-// GameServer.incomingID(id);

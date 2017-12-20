@@ -1,11 +1,11 @@
 class Helper {
 
-	static concatAndClear(array1, array2) {
+	public static concatAndClear(array1 : any[], array2 : any[]) {
 		array1.concat(array2);
 		array2.length = 0;
 	}
 
-	static randomIntFromInterval(min, max) {
+	public static randomIntFromInterval(min : number, max : number) {
 		return Math.floor(Math.random() * (max - min + 1) + min);
 	}
 

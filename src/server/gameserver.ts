@@ -3,7 +3,6 @@ import Incoming from './model/incoming';
 import Player from './object/player';
 import Room from './object/room';
 import Utils from './utils/utils';
-import World from './object/world';
 
 class GameServer {
 
@@ -28,6 +27,7 @@ class GameServer {
 		this.minPlayers = 2;
 		this.maxPlayers = 25;
 		this.initServerSocketLogic();
+		this.tickIntervalId = setInterval(this.tick.bind(this, Constants.SERVER.TICK_RATE), Constants.SERVER.TICK_RATE);
 	}
 
 	/**
@@ -83,6 +83,7 @@ class GameServer {
 			const player = new Player(socket, myIncoming.getId(), myIncoming.getNick());
 			player.getSocket().emit(Constants.EVENTS.WORLD_JOINED, null, (ack) => {
 				// TODO: Check acknowledgement
+				this.initPlayerSocketLogic(player);
 				this.players.push(player);
 				this.room.newPlayer(player);
 				console.log(`${player.getNick()} | ${player.getId()} has joined`);
@@ -112,18 +113,26 @@ class GameServer {
 				for (let i = 0; i < this.players.length; i++) {
 					if (this.players[i].equals(player)) {
 						this.players.splice(i, 1);
+						console.log(`${player.getNick()} | ${player.getId()} has just disconnected`);
 						return;
 					}
 				}
 			}
-			console.log(`${player.getNick()} | ${player.getId()} has just disconnected`);
 		});
 	}
 
+	/**
+	 * Tick the game server logic
+	 * @private
+	 * @param {number} delta
+	 */
 	private tick(delta : number) {
 		this.room.tick(delta);
 	}
 
+	/*
+		Getters & Setters
+	*/
 	public canJoin() {
 		return this.players.length <= this.maxPlayers;
 	}

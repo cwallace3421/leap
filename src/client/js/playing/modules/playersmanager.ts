@@ -42,6 +42,7 @@ class PlayersManager {
 					this.playersSprites[playerPackets[i].id].position.x = playerPackets[i].x;
 					this.playersSprites[playerPackets[i].id].position.y = playerPackets[i].y;
 				} else {
+					console.log('new player: ' + playerPackets[i].nick);
 					this.createPlayer(playerPackets[i]);
 				}
 				// How to detect a disconnected player?

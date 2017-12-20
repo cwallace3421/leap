@@ -25,7 +25,7 @@ class Player {
 		};
 		this.nick = nick;
 		this.alive = true;
-		this.isUpdated();
+		this.hasBeenUpdated();
 	}
 
 	/**
@@ -39,7 +39,7 @@ class Player {
 				this.keys[key] = packet[key];
 			}
 		}
-		this.isUpdated();
+		this.hasBeenUpdated();
 	}
 
 	/**
@@ -78,6 +78,7 @@ class Player {
 	 * Does the player have this socket?
 	 * @public
 	 * @param {SocketIO.Socket} socket
+	 * @returns {boolean}
 	 */
 	public hasSocket(socket : SocketIO.Socket) {
 		return this.socket.id === socket.id;
@@ -87,6 +88,7 @@ class Player {
 	 * Does the provided player equal this player?
 	 * @public
 	 * @param player
+	 * @returns {boolean}
 	 */
 	public equals(player : Player) {
 		return this.id === player.getId() && this.nick === player.getNick() && this.socket.id === player.getSocket().id;
@@ -95,6 +97,7 @@ class Player {
 	/**
 	 * Get the player id
 	 * @public
+	 * @returns {string}
 	 */
 	public getId() {
 		return this.id;
@@ -103,6 +106,7 @@ class Player {
 	/**
 	 * Get the player nickname
 	 * @public
+	 * @returns {string}
 	 */
 	public getNick() {
 		return this.nick;
@@ -111,6 +115,7 @@ class Player {
 	/**
 	 * Get the player socket
 	 * @public
+	 * @returns {SocketIO.Socket}
 	 */
 	public getSocket() {
 		return this.socket;
@@ -119,6 +124,7 @@ class Player {
 	/**
 	 * Gets a packet for this player
 	 * @public
+	 * @returns {object}
 	 */
 	public getPacket() {
 		return {
@@ -142,6 +148,7 @@ class Player {
 	/**
 	 * Is this player alive?
 	 * @public
+	 * @returns {boolean}
 	 */
 	public isAlive() {
 		return this.alive;
@@ -151,7 +158,7 @@ class Player {
 	 * Update the players last updated with nows timestamp
 	 * @private
 	 */
-	private isUpdated() {
+	private hasBeenUpdated() {
 		this.lastUpdated = (+ new Date());
 	}
 
@@ -175,6 +182,7 @@ class Player {
 	 * @public
 	 * @static
 	 * @param {Player[]} array
+	 * @returns {object[]}
 	 */
 	public static getAllPackets(array : Player[]) {
 		let players = [];

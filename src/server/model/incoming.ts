@@ -5,12 +5,15 @@ class Incoming {
 	private timestamp : number;
 	private socketId : string;
 
-	constructor(id, nick) {
+	constructor(id : string, nick : string) {
 		this.id = id;
 		this.nick = nick;
 		this.timestamp = (+ new Date());
 	}
 
+	/*
+		Getters & Setters & Helpers
+	*/
 	public getId() {
 		return this.id;
 	}
