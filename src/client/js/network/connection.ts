@@ -9,7 +9,7 @@ class Connection {
 	 * @public
 	 * @param {function} startCallback - Socket connection callback
 	 */
-	public start(startCallback : Function) {
+	public start(startCallback? : Function) {
 		console.log('Attempting To Open Socket To Server');
 
 		Session.Socket = io(undefined, {
@@ -22,7 +22,9 @@ class Connection {
 
 		Session.Socket.on(Constants.EVENTS.WORLD_JOINED, (response : any, ack : Function) => {
 			this.socketEventLog(Constants.EVENTS.WORLD_JOINED, response);
-			startCallback(response);
+			if (startCallback) {
+				startCallback(response);
+			}
 			ack('SUCCESS');
 		});
 	}

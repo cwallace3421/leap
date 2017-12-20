@@ -4,9 +4,11 @@ module.exports = {
 
 	entry: path.resolve(__dirname, 'src/client/js/index.ts'),
 
+	target: 'web',
+
 	output: {
 		filename: 'bundle.js',
-		path: path.resolve(__dirname, 'dist')
+		path: path.resolve(__dirname, 'dist/client')
 	},
 
 	resolve: {
@@ -29,7 +31,7 @@ module.exports = {
 				mangle: false,
 				output: {
 					comments: false,
-					beautify: false
+					beautify: true
 				}
 			},
 			parallel: true

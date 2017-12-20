@@ -1,7 +1,12 @@
-const Constants = require('../../shared/js/constants.js');
-const Helper = require('../utils/helper');
+import Constants from '../../shared/js/constants';
+import Helper from '../utils/helper';
 
 class RoomMap {
+
+	private template : number[][];
+	private padding : number;
+	private tileSize : number;
+	private map : number[][];
 
 	constructor() {
 		this.template = [
@@ -27,17 +32,34 @@ class RoomMap {
 		}
 	}
 
-	tick(delta) {
+	/**
+	 * Tick the map logic
+	 * @public
+	 * @param {number} delta
+	 */
+	public tick(delta : number) {
 
 	}
 
-	isOnTile(x, y) {
+	/**
+	 * Is the x and y on a tile
+	 * @public
+	 * @param {number} x
+	 * @param {number} y
+	 * @returns {boolean}
+	 */
+	public isOnTile(x : number, y : number) {
 		console.log('TODO: isOnTile');
 		return true;
 	}
 
-	getSpawn() {
-		const pos = {};
+	/**
+	 * Get a random position on the map
+	 * @public
+	 * @returns {Position}
+	 */
+	public getSpawn() {
+		const pos : Position = {};
 		do {
 			pos.x = Helper.randomIntFromInterval(
 				Constants.MAP_PADDING + 10,
@@ -51,9 +73,20 @@ class RoomMap {
 		return pos;
 	}
 
-	getPacket() {
+	/**
+	 * Get the map packet
+	 * @public
+	 * @returns {number[][]}
+	 */
+	public getPacket() {
 		return this.map;
 	}
 
 }
-module.exports = RoomMap;
+
+interface Position {
+	x? : number;
+	y? : number;
+}
+
+export default RoomMap;

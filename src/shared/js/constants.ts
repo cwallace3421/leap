@@ -1,12 +1,12 @@
 const Constants = {
 
-	CLIENT_DEBUG: false,
+	CLIENT_DEBUG: true,
 
 	LOGIN_STATE: 'LOGIN',
 	WAITING_STATE: 'WAITING',
 	PLAYING_STATE: 'PLAYING',
 
-	OBJECT_SCALE: 3,
+	OBJECT_SCALE: 3, // Need to fix this...
 	ENVIRONMENT_SCALE: 3,
 	MAP_PADDING: 300,
 	TILE_SIZE: 56,
@@ -26,6 +26,17 @@ const Constants = {
 		SPECTATING: 4,
 	},
 
+	CLIENT_STATES: {
+		WAITING: 0,
+		PLAYING: 1,
+		FINISH: 2,
+		SPECTATING: 3,
+	},
+
+	SERVER: {
+		TICK_RATE: 1000 / 20
+	},
+
 	EVENTS: {
 		CONNECTION: 'connection',
 		DISCONNECT: 'disconnect',
@@ -38,4 +49,5 @@ const Constants = {
 	}
 
 };
-module.exports = Constants;
+
+export default Constants;

@@ -2,6 +2,7 @@ import Connection from './connection';
 import Constants from '../../../shared/js/constants_client';
 import { PlayerPacket } from '../playing/interface/player';
 import Session from '../global/session';
+import { Tile } from '../global/session';
 import Utils from '../global/utils';
 
 function open() {
@@ -48,7 +49,7 @@ export default {
 
 // Room Joined Response Object
 interface ROOM_JOINED_RES {
-	map : Array<Array<number>>;
+	map : Array<Array<Tile>>;
 	players : Array<PlayerPacket>;
 	state : number;
 	countdown : number;
@@ -66,7 +67,7 @@ interface COUNTDOWN_DONE_RES {
 
 // Server Update Response Object
 interface SERVER_UPDATE_RES {
-	map : Array<Array<number>>;
+	map : Array<Array<Tile>>;
 	players : Array<PlayerPacket>;
 	state : number;
 	countdown? : number;
