@@ -100,7 +100,7 @@ class GameServer {
 		const socket = player.getSocket();
 
 		socket.on(Constants.EVENTS.CLIENT_UPDATE, (data) => {
-			if (player.isAlive() && this.room.isState(Constants.PLAYING_STATES.PLAYING)) {
+			if (player.isAlive() && this.room.isState(Constants.ROOM_STATES.PLAYING)) {
 				player.update(data);
 			}
 		});

@@ -54,7 +54,7 @@ class Room {
 	 * @param {Player} player
 	 */
 	public newPlayer(player : Player) {
-		if (this.getState() === Constants.PLAYING_STATES.PLAYING || this.getState() === Constants.PLAYING_STATES.FINISH) {
+		if (this.getState() === Constants.ROOM_STATES.PLAYING || this.getState() === Constants.ROOM_STATES.FINISH) {
 			player.setAlive(false);
 		}
 
