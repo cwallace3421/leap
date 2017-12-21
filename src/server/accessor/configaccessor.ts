@@ -6,7 +6,7 @@ class ConfigAccessor {
 	private config : Config;
 
 	constructor() {
-		this.config = <Config> JSON.parse(fs.readFileSync(path.resolve(__dirname, 'config.json')).toString());
+		this.config = <Config> JSON.parse(fs.readFileSync(path.resolve(__dirname, '..', 'config.json')).toString());
 	}
 
 	/**

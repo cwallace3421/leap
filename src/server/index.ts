@@ -3,7 +3,7 @@ import * as path from 'path';
 import * as socket from 'socket.io';
 import * as uuid from 'uuid/v4';
 
-import GameServer from './gameserver';
+import GameServer from './object/gameserver';
 import app from './app';
 import config from './accessor/configaccessor';
 

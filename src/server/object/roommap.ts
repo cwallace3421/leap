@@ -1,4 +1,4 @@
-import Constants from '../../shared/js/constants';
+import Constants from '../../shared/constants';
 import Helper from '../utils/helper';
 
 class RoomMap {

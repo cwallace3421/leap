@@ -1,5 +1,5 @@
 import Connection from '../network/connection';
-import Constants from '../../../shared/js/constants_client';
+import Constants from '../../../shared/constants';
 import Session from '../global/session';
 import UI from './modules/ui';
 import Utils from '../global/utils';

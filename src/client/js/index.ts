@@ -1,4 +1,4 @@
-import Constants from '../../shared/js/constants_client';
+import Constants from '../../shared/constants';
 import Login from './login/login';
 import Playing from './playing/playing';
 import Session from './global/session';

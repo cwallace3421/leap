@@ -1,6 +1,6 @@
 import Camera from './objects/camera';
 import Connection from '../network/connection';
-import Constants from '../../../shared/js/constants_client';
+import Constants from '../../../shared/constants';
 import Countdown from '../global/countdown';
 import { ImportantMessage } from './modules/ui';
 import Input from './objects/input';
@@ -9,7 +9,6 @@ import MapManager from './modules/mapmanager';
 import PlayersManager from './modules/playersmanager';
 import Resources from '../global/resources';
 import Session from '../global/session';
-import StateManager from './modules/statemanager';
 import Utils from '../global/utils';
 
 class Playing {

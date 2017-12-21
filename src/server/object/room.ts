@@ -1,5 +1,4 @@
-import Constants from '../../shared/js/constants';
-import GameServer from '../gameserver';
+import Constants from '../../shared/constants';
 import Helper from '../utils/helper';
 import Player from './player';
 import RoomMap from './roommap';

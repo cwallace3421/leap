@@ -1,4 +1,4 @@
-import Constants from '../../../shared/js/constants_client';
+import Constants from '../../../shared/constants';
 import Session from '../global/session';
 import Utils from '../global/utils';
 

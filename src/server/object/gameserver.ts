@@ -1,9 +1,9 @@
-import Constants from '../shared/js/constants';
-import Incoming from './model/incoming';
-import Player from './object/player';
-import Room from './object/room';
-import Utils from './utils/utils';
-import config from './accessor/configaccessor';
+import Constants from '../../shared/constants';
+import Incoming from './incoming';
+import Player from './player';
+import Room from './room';
+import Utils from '../utils/utils';
+import config from '../accessor/configaccessor';
 
 class GameServer {
 

@@ -1,5 +1,5 @@
 import Connection from './connection';
-import Constants from '../../../shared/js/constants_client';
+import Constants from '../../../shared/constants';
 import { PlayerPacket } from '../playing/interface/player';
 import Session from '../global/session';
 import { Tile } from '../global/session';
