@@ -1,0 +1,12 @@
+{
+	"server": {
+		"port": 8080,
+		"tick": 50,
+		"waitTimeout": 5
+	},
+	"room" : {
+		"minSize": 2,
+		"maxSize": 25,
+		"countdown": 10
+	}
+}

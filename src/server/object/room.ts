@@ -3,21 +3,28 @@ import GameServer from '../gameserver';
 import Helper from '../utils/helper';
 import Player from './player';
 import RoomMap from './roommap';
+import config from '../accessor/configaccessor';
 
 class Room {
 
+	private io : SocketIO.Server;
+	private players : Player[];
+	private map : RoomMap;
 	private countdown : number;
+	private minSize : number;
+	private maxSize : number;
+	private state : number;
 	private countdownTimestamp : number;
 	private finishTimestamp : number;
-	private game : GameServer;
-	private map : RoomMap;
-	private state : number;
 
-	constructor(game) {
-		this.countdown = 10;
-		this.game = game;
-		this.map = new RoomMap();
+	constructor(io : SocketIO.Server, players : Player[]) {
 		this.log('New room created');
+		this.io = io;
+		this.players = players;
+		this.map = new RoomMap();
+		this.countdown = config.room.countdown;
+		this.minSize = config.room.minSize;
+		this.maxSize = config.room.maxSize;
 		this.setState(Constants.ROOM_STATES.WAITING);
 	}
 
@@ -28,7 +35,7 @@ class Room {
 	private startCountDown() {
 		this.countdownTimestamp = this.getUnix();
 		this.setState(Constants.ROOM_STATES.COUNTDOWN);
-		this.game.getIO().emit(Constants.EVENTS.COUNTDOWN_START, {
+		this.io.emit(Constants.EVENTS.COUNTDOWN_START, {
 			countdown: this.countdown
 		});
 	}
@@ -38,7 +45,7 @@ class Room {
 	 * @private
 	 */
 	private startRoom() {
-		this.game.getIO().emit(Constants.EVENTS.COUNTDOWN_DONE);
+		this.io.emit(Constants.EVENTS.COUNTDOWN_DONE);
 		this.setState(Constants.ROOM_STATES.PLAYING);
 	}
 
@@ -70,9 +77,9 @@ class Room {
 			// Playing State
 			case Constants.ROOM_STATES.PLAYING: {
 				this.map.tick(delta);
-				Player.tickAll(this.game.getPlayers(), delta);
+				Player.tickAll(this.players, delta);
 
-				if (this.game.getNumberAlive() <= 1) {
+				if (this.getNumberAlive() <= 1) {
 					// this.setState(Constants.ROOM_STATES.FINISH);
 				}
 				break;
@@ -92,9 +99,9 @@ class Room {
 
 			// Waiting State
 			case Constants.ROOM_STATES.WAITING: {
-				if (this.game.getPlayers().length >= this.game.getMinPlayers()) {
+				if (this.players.length >= this.minSize) {
 					// What happens if the player count drops below the min size during countdown. Does it matter?
-					this.log('Room reached min size ' + this.game.getMinPlayers() + ', starting countdown');
+					this.log('Room reached min size ' + this.minSize + ', starting countdown');
 					this.startCountDown();
 				}
 				break;
@@ -110,7 +117,7 @@ class Room {
 			}
 		}
 
-		this.game.getIO().emit(Constants.EVENTS.SERVER_UPDATE, this.getUpdatePacket());
+		this.io.emit(Constants.EVENTS.SERVER_UPDATE, this.getUpdatePacket());
 	}
 
 	/**
@@ -129,7 +136,7 @@ class Room {
 	private getInitPacket() {
 		return {
 			map: this.map.getPacket(),
-			players: Player.getAllPackets(this.game.getPlayers()),
+			players: Player.getAllPackets(this.players),
 			state: this.state,
 			countdown: this.timeLeftInCountdown(this.countdownTimestamp)
 		};
@@ -143,7 +150,7 @@ class Room {
 	private getUpdatePacket() {
 		return {
 			map: this.map.getPacket(),
-			players: Player.getAllPackets(this.game.getPlayers()),
+			players: Player.getAllPackets(this.players),
 			state: this.state,
 			countdown: this.timeLeftInCountdown(this.countdownTimestamp)
 		};
@@ -208,6 +215,16 @@ class Room {
 	public setState(state : number) {
 		this.state = state;
 		this.log('Room entering state: ' + state);
+	}
+
+	public getNumberAlive() {
+		let count = 0;
+		for (let i = 0; i < this.players.length; i++) {
+			if (this.players[i].isAlive()) {
+				count++;
+			}
+		}
+		return count;
 	}
 
 }

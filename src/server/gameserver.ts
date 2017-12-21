@@ -3,15 +3,14 @@ import Incoming from './model/incoming';
 import Player from './object/player';
 import Room from './object/room';
 import Utils from './utils/utils';
+import config from './accessor/configaccessor';
 
 class GameServer {
 
 	private incomingConnections : Incoming[];
 	private io : SocketIO.Server;
-	private room : Room;
 	private players : Player[];
-	private minPlayers : number;
-	private maxPlayers : number;
+	private room : Room;
 	private tickIntervalId : number;
 
 	/**
@@ -22,12 +21,10 @@ class GameServer {
 	public start(io : SocketIO.Server) {
 		this.incomingConnections = [];
 		this.io = io;
-		this.room = new Room(this);
 		this.players = [];
-		this.minPlayers = 2;
-		this.maxPlayers = 25;
+		this.room = new Room(this.io, this.players);
 		this.initServerSocketLogic();
-		this.tickIntervalId = setInterval(this.tick.bind(this, Constants.SERVER.TICK_RATE), Constants.SERVER.TICK_RATE);
+		this.tickIntervalId = setInterval(this.tick.bind(this, config.server.tick), config.server.tick);
 	}
 
 	/**
@@ -77,7 +74,7 @@ class GameServer {
 				break;
 			}
 		}
-		const canConnect = myIncoming && Utils.timeSince(myIncoming.getTimestamp()) < 5;
+		const canConnect = myIncoming && Utils.timeSince(myIncoming.getTimestamp()) < config.server.waitTimeout;
 
 		if (canConnect) {
 			const player = new Player(socket, myIncoming.getId(), myIncoming.getNick());
@@ -134,7 +131,7 @@ class GameServer {
 		Getters & Setters
 	*/
 	public canJoin() {
-		return this.players.length <= this.maxPlayers;
+		return this.players.length <= config.room.maxSize;
 	}
 
 	public getIO() {
@@ -143,24 +140,6 @@ class GameServer {
 
 	public getPlayers() {
 		return this.players;
-	}
-
-	public getMinPlayers() {
-		return this.minPlayers;
-	}
-
-	public getMaxPlayers() {
-		return this.maxPlayers;
-	}
-
-	public getNumberAlive() {
-		let count = 0;
-		for (let i = 0; i < this.players.length; i++) {
-			if (this.players[i].isAlive()) {
-				count++;
-			}
-		}
-		return count;
 	}
 
 }

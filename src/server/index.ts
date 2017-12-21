@@ -5,12 +5,13 @@ import * as uuid from 'uuid/v4';
 
 import GameServer from './gameserver';
 import app from './app';
+import config from './accessor/configaccessor';
 
 const server : http.Server = http.createServer(app);
 const io : SocketIO.Server = socket.listen(server);
 const game : GameServer = new GameServer();
 
-server.listen(process.env.PORT || 8080, function() {
+server.listen(config.server.port || process.env.PORT || 8080, function() {
 	console.log('Listening on ' + server.address().port);
 	game.start(io);
 });
